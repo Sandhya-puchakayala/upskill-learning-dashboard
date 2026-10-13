@@ -21,6 +21,15 @@ Optional: `npm run move-learner -- s3 ctr_pun` moves Priya to the Pune center. S
 
 **Stack:** Next.js (App Router, route handlers), TypeScript, SQLite through libSQL. It runs locally from a file and can deploy to Vercel with a Turso database by setting `DATABASE_URL` / `DATABASE_AUTH_TOKEN`. No ORM; the schema is plain SQL in [`db/schema.sql`](db/schema.sql). UI: plain CSS (light/dark), Inter font, lucide icons.
 
+### Deploy
+
+Live: **https://upskill-learning-dashboard.vercel.app**
+
+If the database has no tables, the app seeds it on first request (`lib/db.ts`), so a fresh deploy needs no manual step.
+
+- **As deployed (no env vars):** SQLite in the serverless function's `/tmp`. It works for a demo, but each server instance has its own copy and a cold start re-seeds it. An enrollment can therefore disappear after a while, which also resets the demo.
+- **Persistent:** create a free [Turso](https://turso.tech) database and set `DATABASE_URL` (`libsql://…`) and `DATABASE_AUTH_TOKEN` in Vercel. No code change; the same libSQL client talks to it, and it seeds itself on first request.
+
 ## What's in the app
 
 | Brief | Where |
