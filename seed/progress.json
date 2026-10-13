@@ -1,0 +1,8 @@
+[
+  {"studentId":"s1","courseId":"c1","completedLessons":12,"totalLessons":12,"lastActiveAt":"2026-09-14T18:00:00+05:30"},
+  {"studentId":"s1","courseId":"c2","completedLessons":10,"totalLessons":12,"lastActiveAt":"2026-10-04T20:15:00+05:30"},
+  {"studentId":"s1","courseId":"c3","completedLessons":4,"totalLessons":16,"lastActiveAt":"2026-10-05T12:00:00+05:30"},
+  {"studentId":"s2","courseId":"c4","completedLessons":10,"totalLessons":10,"lastActiveAt":"2026-08-30T17:00:00+05:30"},
+  {"studentId":"s2","courseId":"c5","completedLessons":3,"totalLessons":12,"lastActiveAt":"2026-09-28T16:40:00+05:30"},
+  {"studentId":"s3","courseId":"c6","completedLessons":5,"totalLessons":10,"lastActiveAt":"2026-10-03T21:10:00+05:30"}
+]

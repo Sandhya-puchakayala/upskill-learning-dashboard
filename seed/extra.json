@@ -1,0 +1,22 @@
+{
+  "_note": "Added by us, not part of the provided seed. Centers/coaches/memberships demonstrate multi-center; s4 and s5 demonstrate the empty state and the recommender paths. No courses were added.",
+  "centers": [
+    { "id": "ctr_blr", "name": "Bengaluru", "timezone": "Asia/Kolkata", "courses": ["c1", "c2", "c3", "c4", "c5", "c6"] },
+    { "id": "ctr_pun", "name": "Pune", "timezone": "Asia/Kolkata", "courses": ["c1", "c2", "c3", "c4", "c5"] }
+  ],
+  "coaches": [
+    { "id": "co1", "name": "Meera Iyer", "centerId": "ctr_blr" },
+    { "id": "co2", "name": "Arjun Das", "centerId": "ctr_pun" }
+  ],
+  "students": [
+    { "id": "s4", "name": "Karan Shah", "goals": ["data", "dashboards"] },
+    { "id": "s5", "name": "Neha Kapoor", "goals": ["react"] }
+  ],
+  "memberships": [
+    { "studentId": "s1", "centerId": "ctr_blr", "startedAt": "2026-08-01T09:00:00+05:30" },
+    { "studentId": "s2", "centerId": "ctr_blr", "startedAt": "2026-07-01T09:00:00+05:30" },
+    { "studentId": "s3", "centerId": "ctr_blr", "startedAt": "2026-09-01T09:00:00+05:30" },
+    { "studentId": "s4", "centerId": "ctr_blr", "startedAt": "2026-10-01T09:00:00+05:30" },
+    { "studentId": "s5", "centerId": "ctr_pun", "startedAt": "2026-10-01T09:00:00+05:30" }
+  ]
+}

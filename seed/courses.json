@@ -1,0 +1,8 @@
+[
+  {"id":"c1","title":"Web Foundations","skillsTaught":["html","css","frontend"],"prerequisites":[]},
+  {"id":"c2","title":"JavaScript Essentials","skillsTaught":["javascript","frontend"],"prerequisites":["c1"]},
+  {"id":"c3","title":"React Basics","skillsTaught":["react","frontend"],"prerequisites":["c2"]},
+  {"id":"c4","title":"SQL Fundamentals","skillsTaught":["sql","data"],"prerequisites":[]},
+  {"id":"c5","title":"Building Dashboards","skillsTaught":["dashboards","sql"],"prerequisites":["c4"]},
+  {"id":"c6","title":"User Research 101","skillsTaught":["user-research","product"],"prerequisites":[]}
+]

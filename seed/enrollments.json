@@ -1,0 +1,8 @@
+[
+  {"studentId":"s1","courseId":"c1","enrolledAt":"2026-08-12T09:00:00+05:30"},
+  {"studentId":"s1","courseId":"c2","enrolledAt":"2026-08-28T09:00:00+05:30"},
+  {"studentId":"s1","courseId":"c3","enrolledAt":"2026-09-15T09:00:00+05:30"},
+  {"studentId":"s2","courseId":"c4","enrolledAt":"2026-07-20T10:00:00+05:30"},
+  {"studentId":"s2","courseId":"c5","enrolledAt":"2026-09-01T10:00:00+05:30"},
+  {"studentId":"s3","courseId":"c6","enrolledAt":"2026-09-10T11:00:00+05:30"}
+]
