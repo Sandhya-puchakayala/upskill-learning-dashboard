@@ -1,5 +1,5 @@
 {
-  "_note": "Added by us, not part of the provided seed. Centers/coaches/memberships demonstrate multi-center; s4 and s5 demonstrate the empty state and the recommender paths. No courses were added.",
+  "_note": "Added by us, not part of the provided seed. Centers/coaches/memberships demonstrate multi-center. s4 and s5 (no courses) demonstrate the empty state and the recommender paths. s6 and s7 give the Pune center sample progress so its coach sees at-risk and on-track learners too. No courses were added.",
   "centers": [
     { "id": "ctr_blr", "name": "Bengaluru", "timezone": "Asia/Kolkata", "courses": ["c1", "c2", "c3", "c4", "c5", "c6"] },
     { "id": "ctr_pun", "name": "Pune", "timezone": "Asia/Kolkata", "courses": ["c1", "c2", "c3", "c4", "c5"] }
@@ -10,13 +10,27 @@
   ],
   "students": [
     { "id": "s4", "name": "Karan Shah", "goals": ["data", "dashboards"] },
-    { "id": "s5", "name": "Neha Kapoor", "goals": ["react"] }
+    { "id": "s5", "name": "Neha Kapoor", "goals": ["react"] },
+    { "id": "s6", "name": "Ananya Desai", "goals": ["react", "frontend"] },
+    { "id": "s7", "name": "Vikram Rao", "goals": ["sql", "dashboards"] }
   ],
   "memberships": [
     { "studentId": "s1", "centerId": "ctr_blr", "startedAt": "2026-08-01T09:00:00+05:30" },
     { "studentId": "s2", "centerId": "ctr_blr", "startedAt": "2026-07-01T09:00:00+05:30" },
     { "studentId": "s3", "centerId": "ctr_blr", "startedAt": "2026-09-01T09:00:00+05:30" },
     { "studentId": "s4", "centerId": "ctr_blr", "startedAt": "2026-10-01T09:00:00+05:30" },
-    { "studentId": "s5", "centerId": "ctr_pun", "startedAt": "2026-10-01T09:00:00+05:30" }
+    { "studentId": "s5", "centerId": "ctr_pun", "startedAt": "2026-10-01T09:00:00+05:30" },
+    { "studentId": "s6", "centerId": "ctr_pun", "startedAt": "2026-08-20T09:00:00+05:30" },
+    { "studentId": "s7", "centerId": "ctr_pun", "startedAt": "2026-09-10T09:00:00+05:30" }
+  ],
+  "enrollments": [
+    { "studentId": "s6", "courseId": "c1", "enrolledAt": "2026-08-22T10:00:00+05:30" },
+    { "studentId": "s6", "courseId": "c2", "enrolledAt": "2026-09-15T10:00:00+05:30" },
+    { "studentId": "s7", "courseId": "c4", "enrolledAt": "2026-09-12T10:00:00+05:30" }
+  ],
+  "progress": [
+    { "studentId": "s6", "courseId": "c1", "completedLessons": 12, "totalLessons": 12, "lastActiveAt": "2026-09-12T19:30:00+05:30" },
+    { "studentId": "s6", "courseId": "c2", "completedLessons": 5, "totalLessons": 12, "lastActiveAt": "2026-09-29T20:00:00+05:30" },
+    { "studentId": "s7", "courseId": "c4", "completedLessons": 6, "totalLessons": 10, "lastActiveAt": "2026-10-05T18:45:00+05:30" }
   ]
 }

@@ -9,10 +9,14 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Client, InStatement } from "@libsql/client";
 import courses from "../seed/courses.json";
-import enrollments from "../seed/enrollments.json";
+import seedEnrollments from "../seed/enrollments.json";
 import extra from "../seed/extra.json";
-import progress from "../seed/progress.json";
+import seedProgress from "../seed/progress.json";
 import students from "../seed/students.json";
+
+// Provided seed first, then our clearly marked additions from extra.json.
+const enrollments = [...seedEnrollments, ...extra.enrollments];
+const progress = [...seedProgress, ...extra.progress];
 
 /** Store every timestamp as UTC ISO so string comparison == time comparison. */
 const utc = (iso: string) => new Date(iso).toISOString();

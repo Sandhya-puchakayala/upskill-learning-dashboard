@@ -38,7 +38,7 @@ If the database has no tables, the app seeds it on first request (`lib/db.ts`), 
 | My courses: % complete, on-track / at-risk | Course cards with a progress bar and status. Completed courses get their own status, so a course finished a month ago is not "at risk". |
 | Recommend next: one course with a reason | "Recommended next" card. See the [algorithm](#recommend-next). |
 | Enroll, UI updates | Button on the recommendation. The server re-checks eligibility and returns the updated learner; the table, stat strip, charts, courses and recommendation all update without a reload. |
-| ≥3 students, empty / loading / error, phone | 5 learners. Skeleton while loading. Error card with retry. Empty states for no learners, goals, skills, courses or recommendation. Tested at 390px wide with no horizontal scroll. |
+| ≥3 students, empty / loading / error, phone | 7 learners across 2 centers. Skeleton while loading. Error card with retry. Empty states for no learners, goals, skills, courses or recommendation. Tested at 390px wide with no horizontal scroll. |
 
 ### The "As of" switch: why it exists
 
@@ -75,6 +75,7 @@ Steps 3 and 4 matter more than they look: in the seed, **all three students are 
 - Rohan: *Keep going with Building Dashboards (25% done)… No activity for 8 days.*
 - Karan (added, no courses): *Enroll: SQL Fundamentals. Teaches data, your goal.*
 - Neha (added, Pune): *Enroll: Web Foundations. First step toward React Basics.*
+- Ananya (added, Pune): *Finish JavaScript Essentials (41% done). It unlocks React Basics… No activity for 7 days.*
 
 ## Schema
 
@@ -134,7 +135,7 @@ Notes on modelling choices:
 - **Catalog shared, offering per center.** A center can stop offering a course without forking the catalog. Eligibility checks `center_courses`.
 - **Timezone per center.** "Inactive for more than 3 days" means local days.
 
-The seed adds two centers (Bengaluru with Meera, Pune with Arjun) and two learners (`seed/extra.json`, clearly marked). No courses were added.
+The seed adds two centers (Bengaluru with Meera, Pune with Arjun) and four learners (`seed/extra.json`, clearly marked): Karan and Neha have no courses (empty state, enroll flow); Ananya and Vikram have sample progress so the Pune coach also sees at-risk and on-track learners. The original three students' data is exactly as provided. No courses were added.
 
 ## Add-ons
 
