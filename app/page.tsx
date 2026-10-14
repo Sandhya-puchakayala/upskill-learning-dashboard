@@ -27,7 +27,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { Coach } from "@/lib/queries";
-import { compareForTriage, type CourseView, type LearnerStatus, type LearnerView } from "@/lib/rules";
+import {
+  averageProgress,
+  compareByPerformance,
+  compareForTriage,
+  type CourseView, type LearnerStatus, type LearnerView } from "@/lib/rules";
 
 type Clock = "seed" | "today";
 type Filter = "all" | LearnerStatus;
@@ -315,6 +319,7 @@ export default function Page() {
   const [dash, setDash] = useState<Dashboard>({ state: "loading" });
   const [openId, setOpenId] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
+  const [sort, setSort] = useState<"performance" | "urgent">("performance");
   const [menuOpen, setMenuOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
@@ -370,7 +375,9 @@ export default function Page() {
   const learners = dash.state === "ready" ? dash.learners : [];
   const open = learners.find((l) => l.id === openId) ?? null;
   const coach = coaches?.find((c) => c.id === coachId);
-  const visible = filter === "all" ? learners : learners.filter((l) => l.status === filter);
+  const visible = (filter === "all" ? learners : learners.filter((l) => l.status === filter))
+    .slice()
+    .sort(sort === "performance" ? compareByPerformance : compareForTriage);
   const tz = learners[0]?.timezone ?? "Asia/Kolkata";
 
   const replaceLearner = useCallback((updated: LearnerView) => {
@@ -548,7 +555,7 @@ export default function Page() {
           </div>
         </header>
 
-        <main className="content">
+        <main className={`content ${filter !== "all" ? "filtered" : ""}`}>
           {coachError ? (
             <ErrorState message={coachError} onRetry={() => (setCoachError(null), setReload((n) => n + 1))} />
           ) : coaches && coaches.length === 0 ? (
@@ -632,15 +639,28 @@ export default function Page() {
                 <div className="table-head">
                   <div>
                     <h2>{filter === "all" ? "Learners" : STATUS_LABEL[filter]}</h2>
-                    <p>Most urgent first · click a learner for details</p>
+                    <p>
+                      {sort === "performance" ? "Top performers first: goals reached, then average progress" : "Most urgent first: at risk, then not started"}{" "}
+                      · click a learner for details
+                    </p>
                   </div>
-                  <div className="filter-chips" role="group" aria-label="Filter learners">
-                    {nav.map((n) => (
-                      <button key={n.key} aria-pressed={filter === n.key} onClick={() => setFilter(n.key)}>
-                        {n.key === "all" ? "All" : n.label}
-                        <span>{n.key === "all" ? counts.total : counts[n.key]}</span>
+                  <div className="table-tools">
+                    <div className="segmented" role="group" aria-label="Sort learners">
+                      <button aria-pressed={sort === "performance"} onClick={() => setSort("performance")}>
+                        Top performers
                       </button>
-                    ))}
+                      <button aria-pressed={sort === "urgent"} onClick={() => setSort("urgent")}>
+                        Most urgent
+                      </button>
+                    </div>
+                    <div className="filter-chips" role="group" aria-label="Filter learners">
+                      {nav.map((n) => (
+                        <button key={n.key} aria-pressed={filter === n.key} onClick={() => setFilter(n.key)}>
+                          {n.key === "all" ? "All" : n.label}
+                          <span>{n.key === "all" ? counts.total : counts[n.key]}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -681,7 +701,10 @@ export default function Page() {
                                   <Avatar name={l.name} />
                                   <span>
                                     <b>{l.name}</b>
-                                    <small>{plural(l.courses.length, "course")}</small>
+                                    <small>
+                                      {plural(l.courses.length, "course")}
+                                      {l.courses.length > 0 && ` · ${averageProgress(l)}% avg`}
+                                    </small>
                                   </span>
                                 </span>
                               </td>
@@ -793,6 +816,11 @@ function LearnerDetail({
   const goalsEarned = learner.goals.filter((g) => g.earned).length;
   const reco = learner.recommendation;
   const tz = learner.timezone;
+  const firstName = learner.name.split(" ")[0];
+  const atRisk = learner.courses.filter((c) => c.status === "at-risk");
+  const maxIdle = Math.max(0, ...atRisk.map((c) => c.daysInactive));
+  /** A full week or more without study is escalated from "needs attention" to "urgent". */
+  const urgent = maxIdle >= 7;
 
   return (
     <div className="detail">
@@ -811,6 +839,57 @@ function LearnerDetail({
       </header>
 
       <div className="drawer-body">
+        {atRisk.length > 0 && (
+          <section className={`alert ${urgent ? "urgent" : ""}`} aria-label="Needs attention">
+            <div className="alert-head">
+              <span className="alert-icon">
+                <TriangleAlert size={20} />
+              </span>
+              <div>
+                <h3>
+                  {urgent ? "Urgent" : "Needs attention"} · idle {plural(maxIdle, "day")}
+                </h3>
+                <p>
+                  {firstName} hasn&apos;t studied {atRisk.length > 1 ? `${atRisk.length} courses` : "a course"} for more than 3 days.
+                  {reco.kind === "resume" && ` Reach out today and ask ${firstName} to resume ${reco.title}.`}
+                </p>
+              </div>
+            </div>
+            <ul className="alert-list">
+              {atRisk.map((c) => (
+                <li key={c.enrollmentId}>
+                  <div className="alert-course">
+                    <b>{c.title}</b>
+                    <span>
+                      No activity for {plural(c.daysInactive, "day")} · last active {formatDay(c.lastActiveAt, tz)} · {c.percent}% done
+                    </span>
+                  </div>
+                  <div className="alert-actions">
+                    {c.lastNudgedAt && (
+                      <span className="nudged">
+                        <Check size={13} /> Nudged {formatDay(c.lastNudgedAt, tz)}
+                      </span>
+                    )}
+                    <button
+                      className={`btn ${c.lastNudgedAt ? "btn-ghost" : "btn-alert"}`}
+                      disabled={busy !== null}
+                      onClick={() => run(`nudge-${c.enrollmentId}`, () => onNudge(learner, c))}
+                    >
+                      <Send size={14} />
+                      {busy === `nudge-${c.enrollmentId}` ? "Saving…" : c.lastNudgedAt ? "Nudge again" : "Log nudge"}
+                    </button>
+                  </div>
+                  {error?.key === `nudge-${c.enrollmentId}` && (
+                    <span className="error-text" role="alert">
+                      {error.message}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <div className="stats">
           <div className="stat stat-wide">
             <div className="stat-label">
@@ -941,28 +1020,6 @@ function LearnerDetail({
                     </div>
                   )}
 
-                  {c.status === "at-risk" && (
-                    <div className="course-actions">
-                      <button
-                        className="btn btn-ghost"
-                        disabled={busy !== null}
-                        onClick={() => run(`nudge-${c.enrollmentId}`, () => onNudge(learner, c))}
-                      >
-                        <Send size={14} />
-                        {busy === `nudge-${c.enrollmentId}` ? "Saving…" : c.lastNudgedAt ? "Log another nudge" : "Log nudge"}
-                      </button>
-                      {c.lastNudgedAt && (
-                        <span className="nudged">
-                          <Check size={13} /> Nudged {formatDay(c.lastNudgedAt, tz)}
-                        </span>
-                      )}
-                      {error?.key === `nudge-${c.enrollmentId}` && (
-                        <span className="error-text" role="alert">
-                          {error.message}
-                        </span>
-                      )}
-                    </div>
-                  )}
                 </div>
               ))}
             </div>

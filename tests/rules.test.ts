@@ -4,6 +4,8 @@ import {
   activeDays,
   buildLearnerView,
   checkEligibility,
+  averageProgress,
+  compareByPerformance,
   compareForTriage,
   courseStatus,
   earnsSkills,
@@ -205,5 +207,15 @@ describe("triage order", () => {
       ["Priya", "on-track"],
       ["Aisha", "on-track"],
     ]);
+  });
+});
+
+describe("performance order", () => {
+  it("ranks by goals reached, then average progress, then active days", () => {
+    const named = (name: string, l: LearnerRecord) => ({ ...buildLearnerView(l, catalog, SEED_CLOCK), name });
+    const views = [named("Rohan", rohan), named("Priya", priya), named("Aisha", aisha), named("New", learner(["data"], []))];
+    expect(views.map((v) => [v.name, averageProgress(v)])).toEqual([["Rohan", 63], ["Priya", 50], ["Aisha", 69], ["New", 0]]);
+    // Aisha and Rohan both 1/2 goals; Aisha's 69% average beats Rohan's 63%.
+    expect(views.sort(compareByPerformance).map((v) => v.name)).toEqual(["Aisha", "Rohan", "Priya", "New"]);
   });
 });

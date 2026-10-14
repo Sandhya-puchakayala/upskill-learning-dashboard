@@ -396,3 +396,20 @@ export function compareForTriage(a: LearnerView, b: LearnerView): number {
     a.name.localeCompare(b.name)
   );
 }
+
+/** Mean percent complete across the learner's courses (0 with no courses). */
+export function averageProgress(l: LearnerView): number {
+  return l.courses.length ? Math.round(l.courses.reduce((s, c) => s + c.percent, 0) / l.courses.length) : 0;
+}
+
+const goalShare = (l: LearnerView) => (l.goals.length ? l.goals.filter((g) => g.earned).length / l.goals.length : 0);
+
+/** Top performers first: goals reached, then average course progress, then active days. */
+export function compareByPerformance(a: LearnerView, b: LearnerView): number {
+  return (
+    goalShare(b) - goalShare(a) ||
+    averageProgress(b) - averageProgress(a) ||
+    b.activeDays.count - a.activeDays.count ||
+    a.name.localeCompare(b.name)
+  );
+}
